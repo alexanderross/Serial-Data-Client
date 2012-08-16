@@ -1,0 +1,144 @@
+Breifly:
+==================
+>>Current Version: 0.2
+
+Generally, is a C#-based client for recieving serial data from any sort of MCU. Created for Smart CCTV Implementation.
+
+Config File
+==================
+Called CCTV.cfg, sits happily in '/', loaded and managed by (DataManagers.CFGDataManager)
+
+Stores user-defined values for aspects of the utility's operation. If important ones of these are removed, the utlity can replace them at it's discretion.
+
+Web Server
+==================
+The client includes it's own HTTP server. Looks at /www/ as it's siteroot and runs at localhost.
+Version 0.2
+	Server Handles GET requests, has the ability to throw standard (404,400,500 etc.) codes. 
+
+Version 0.3 
+	Server Handles POST requests, has the ability to facilitate AJAX calls.
+
+Config Tags:
+------------
+Version 0.2
+	http_port_default=(0-65535) : The port at which the web service is located. 
+
+Version 0.4
+	
+	
+
+Scripting Tags:
+---------------
+	In a .html file that the page will serve, it is run through a command processor that looks for code contained within a (!  !) tag. The commands are case-insensitive.
+Version 0.2:
+	SENSORS.RENDER.ALL() : Render all available sensors currently active in the client.
+	SENSORS.RENDER() : Same as SENSORS.RENDER()
+        SENSORS.RENDER.BYNAME(Sensor_Name) :Render HTML for specific sensor where 'Sensor_Raw_Name' is the raw name of the sensor 
+
+Version 0.3:
+	SENSORS.RENDER.BYTYPE(Type) : Render all sensors by type ('DIGITAL','ANALOG')
+	SENSORS[SENSOR_NAME].RENDER() : Same as SENSORS.RENDER.BYNAME(SENSOR_NAME), in fact depreciates it...
+	SENSORS[SENSOR_NAME].RENDERATTRIBUTE(ATTR_NAME) : Render the specific attribute of the sensor
+	SERIAL.RENDER() : Render the current status of the client's serial connection
+	SERIAL.RENDER.PORT(): Render the port being used by the serial connection
+	SERIAL.RENDER.RATE(): Render the baud rate currently in use for said connection
+
+Version 0.4:
+	RENDER.PRESENTATION('DIV'(default) || 'TABLE') : Changes presentation from either Div's/b's/labels to tr's/td's to be used in tables.
+
+Version 0.5:
+	SENSORS.ALERT.SET(NAME,THRESHOLD,RESPONSE): Configure a sensor to alert a user VIA SMS when a threshold is met, this is intended to be used on less false-positive prone sensors.
+	SENSORS[SENSOR_NAME].MODIFY.REFINEDNAME(SENSOR_NAME,REFINED_Name) :Edit the refined name of a sensor
+	SENSORS[SENSOR_NAME].MODIFY.DESCRIPTION(SENSOR_NAME,DESCRIPTION) :Edit the description of a sensor
+	SENSORS[SENSOR_NAME].MODIFY.MINVALUE(VALUE):Edit the minimum value of a sensor
+	SENSORS[SENSOR_NAME].MODIFY.MAXVALUE(VALUE):Edit the maximum value of a sensor
+	SENSORS[SENSOR_NAME].MODIFY.MINACTUALVALUE(VALUE):Edit the minimum Actual value of a sensor (See sensor section for clarification towards the word 'actual')
+	SENSORS[SENSOR_NAME].MODIFY.MAXACTUALVALUE(VALUE):Edit the max Actual value of a sensor
+	SENSORS[SENSOR_NAME].MODIFY.UNITS(VALUE):Edit the units to be displayed for the interpreted sensor reading
+
+Serial Connection
+==================
+
+A class (SerialController) Is used to provide easy access to serial data for the rest of the utility.
+Version 0.2
+	Current.
+
+version 0.4
+	Final, includes methods to provide error-checking for wireless communication. 
+
+Config Tags:
+------------
+Version 0.2
+	serial_port_default : port to attempt connection to at open.
+	serial_rate_default : baud rate for serial connection
+	serial_read_interval : Delay between reads in the serial Rx thread (ms)
+
+Version 0.4
+	serial_data_bits: standard length of data bits per byte
+	serial_handshake: handshaking protocol for serial port transmission of data
+	serial_parity: parity-checking protocol
+	serial_stop_bits: standard number of stopbits per byte
+	serial_broadcast_start: The string sent from the client to an MCU to start the MCU's transmission of data
+	serial_broadcast_stop: The string sent from the client to an MCU to stop the MCU's transmission of data
+
+Sensor Meta-Data
+==================
+
+A Class (DataManagers.MCUDataManager) Is used to save user-made changes to sensors, as well as load preferred settings on startup. 
+Default file location for these settings is /definitions.xml . 
+
+XML formatting is as follows: 
+
+<DATA>
+ <DATAINSTANCE type='(ANALOG || DIGITAL)'>
+	<*PARAM*>value</*PARAM*> : Param names are hard-coded and cannot be fudged, spelling must be exact. 
+ </DATAINSTANCE>
+</DATA>
+
+A note: Digial instances will not have MINVALUE,MAXVALUE,UNITS,MINACTIALVALUE,MAXACTUALVALUE. They are digital.. 1 or 0...
+
+An example of a datainstance would be
+
+<DATAINSTANCE type='ANALOG'>
+	<RAWNAME>LDR</RAWNAME>
+	<REFINEDNAME>Light-Sensing Resistor</REFINEDNAME>
+	<DESCRIPTION>A resistor meant to sense ambient light</DESCRIPTION>
+	<MINVALUE>0</MINVALUE>
+	<MAXVALUE>1024</MAXVALUE>
+	<UNITS>LIGHT</UNITS>
+	<MINACTUALVALUE>0</MINACTUALVALUE>
+	<MAXACTUALVALUE>1024</MAXACTUALVALUE>
+</DATAINSTANCE>
+
+Version 0.2
+	Current
+Version 0.4
+	Implement tag <DISCRETE> in analog instances. This would add the ability to add discrete assignments to ranges of values.
+	ie.(For a reading from a photoresistor range(0-1024)) 
+		<DISCRETE>
+			<RANGE>
+				<START>MIN</START> // 'MIN' shortcuts to the MINVALUE
+				<STOP>300</STOP>
+				<NAME>Dark</NAME>
+			</RANGE>
+			<RANGE>
+				<START>301</START>
+				<STOP>600</STOP> // 'MAX' shortcuts to the MAXVALUE
+				<NAME>Pleasant</NAME>
+			</RANGE>
+			<RANGE>
+				<START>601</START>
+				<STOP>MAX</STOP> // 'MAX' shortcuts to the MAXVALUE
+				<NAME>Light</NAME>
+			</RANGE>
+		</DISCRETE>
+
+More later...
+
+	
+
+
+	
+	
+

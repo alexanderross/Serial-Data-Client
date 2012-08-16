@@ -1,0 +1,11 @@
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\bin\Debug\CCTVClient.exe.config
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\CCTVClient.exe
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\CCTVClient.pdb
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\bin\Debug\CCTVClient.exe
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\bin\Debug\CCTVClient.pdb
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\CCTVClient.MainPage.resources
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\CCTVClient.Properties.Resources.resources
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\CCTVClient.Setup.resources
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\BOXIII\Documents\Visual Studio 2010\Projects\CCTVClient\CCTVClient\obj\x86\Debug\GenerateResource.write.1.tlog

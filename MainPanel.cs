@@ -20,14 +20,6 @@ namespace CCTVClient
         public MainPanel(MainPage inputParent){
             parent = inputParent;
             type = "MAIN";
-            if (parent.mySerialConn.ActiveSerialPort.IsOpen)
-            {
-                
-            }
-            else
-            {
-
-            }
         }
 
         public void InitSensorAndDetails(){

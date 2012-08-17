@@ -1,4 +1,15 @@
-﻿using System;
+﻿/* 
+ * Version 0.3:
+	SENSORS.RENDER.BYTYPE(Type) : Render all sensors by type ('DIGITAL','ANALOG')
+	SENSORS[SENSOR_NAME].RENDER() : Same as SENSORS.RENDER.BYNAME(SENSOR_NAME), in fact depreciates it...
+	SENSORS[SENSOR_NAME].RENDERATTRIBUTE(ATTR_NAME) : Render the specific attribute of the sensor
+	SERIAL.RENDER() : Render the current status of the client's serial connection
+	SERIAL.RENDER.PORT(): Render the port being used by the serial connection
+	SERIAL.RENDER.RATE(): Render the baud rate currently in use for said connection
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,26 +73,93 @@ namespace CCTVClient.Web
         {
             try
             {
-                String[] parsedCmd = input.Split('(');
-                parsedCmd[0] = parsedCmd[0].ToUpper();
-                parsedCmd[1] = parsedCmd[1].Replace(")", "");
-                switch (parsedCmd[0])
+                String[] parsedCmd = input.Split('.');
+                String specificName = "";
+                specificName = Regex.Match(parsedCmd[0], @"\[(.*)\]").Groups[1].Value;
+
+                if (parsedCmd[0].Contains("SENSORS"))
                 {
-                    case "SENSORS.RENDER":
-                        return RenderAllSensors();
-                    case "SENSORS.RENDER.BYNAME":
-                        return RenderSensor(parsedCmd[1]);
-                    case "SENSORS.RENDER.ALL":
-                        return RenderAllSensors();
-                    default:
-                        return ErrorCode(0);
+                    return ProcessSensorCommand(parsedCmd[1] +"."+ parsedCmd[2], specificName);
                 }
+                else if (parsedCmd[0].Contains("SERIAL"))
+                {
+                    return ProcessSerialCommand(parsedCmd[1],specificName);
+                }
+                else if (parsedCmd[0].Contains("RENDERING"))
+                {
+                    return "Render Commands not implemented yet.. sorry.";
+                }
+                else
+                {
+                    return ErrorCode(0, input);
+                }
+
             }
             catch (Exception ex)
             {
-                return ErrorCode(0);
+                return ErrorCode(0,input);
             }
 
+        }
+        /*
+    -SENSORS.RENDER.BYTYPE(Type) : Render all sensors by type ('DIGITAL','ANALOG')
+	-SENSORS[SENSOR_NAME].RENDER() : Same as SENSORS.RENDER.BYNAME(SENSOR_NAME), in fact depreciates it...
+	SENSORS[SENSOR_NAME].RENDER.ATTRIBUTE(ATTR_NAME) : Render the specific attribute of the sensor
+    -SENSORS.RENDER.ALL() : Render all available sensors currently active in the client.
+	-SENSORS.RENDER() : Same as SENSORS.RENDER()
+     */
+
+        private String ProcessSensorCommand(string command,string name)
+        {
+            String[] cmd = command.Split('.');
+            if (name != "")
+            {
+                if (cmd[0] == "RENDER")
+                {
+                    if (cmd[1] == "ATTRIBUTE")
+                    {
+                        return "TODO: Implement Attribute lookup";
+                    }
+                    else
+                    {
+                        return RenderSensor(name);
+                    }
+                }
+            }
+            else
+            {
+                if (cmd[0] == "RENDER")
+                {
+                    if (cmd.Length > 1)
+                    {
+                        if (cmd[1].Contains("BYTYPE"))
+                        {
+                            try
+                            {
+                                return RenderSensorsByType(Regex.Match(cmd[1], @"\((.*)\)").Groups[1].Value);
+                            }
+                            catch (Exception e)
+                            {
+                                return ErrorCode(4, command);
+                            }
+                        }
+                        else if(cmd[1].Contains("ALL"))
+                        {
+                            return RenderAllSensors();
+                        }
+                    }
+                    else
+                    {
+                        return RenderAllSensors();
+                    }
+                }
+            }
+            return "";
+        }
+
+        private String ProcessSerialCommand(string command,string name)
+        {
+            return "";
         }
 
         private String RenderAllSensors()
@@ -98,6 +176,19 @@ namespace CCTVClient.Web
             return String.Empty;
         }
 
+        private String RenderSensorsByType(String type)
+        {
+            String output = "";
+                foreach (MCUDataAsset data in DataSet.MCU.DataItems.Values)
+                {
+                    if (data.GetType() == type)
+                    {
+                        output += data.ToHTML();
+                    }
+                }
+                return output;
+        }
+
         private String RenderSensor(String sensorName){
             if(DataSet.MCU.DataItems.ContainsKey(sensorName)){
                 return DataSet.MCU.DataItems[sensorName].ToHTML();
@@ -110,9 +201,9 @@ namespace CCTVClient.Web
             return String.Empty;
         }
 
-        private String ErrorCode(int code)
+        private String ErrorCode(int code,string context="")
         {
-            String output="";
+            String output="(CODE ERROR)";
             switch (code) {
                 case 0:
                     output += "Invalid Command syntax, please check the documentation for proper use.";
@@ -123,9 +214,19 @@ namespace CCTVClient.Web
                 case 2:
                     output += "Sensor attribute not found in current data definition.";
                     break;
+                case 3:
+                    output += "Sensor type not found in current data definition.";
+                    break;
+                case 4:
+                    output += "Argument Formatting error.";
+                    break;
                 default:
                     output += "I have no idea what that code is.";
                     break;
+            }
+            if (context != "")
+            {
+                output += " -- Around ('"+context+"')";
             }
             return output;
 

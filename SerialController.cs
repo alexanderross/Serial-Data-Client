@@ -20,6 +20,8 @@ namespace CCTVClient
         private int badDataCount = 0;
         private String input="";
         private String[] inputArray;
+        public string startCode;
+        public string stopCode;
 
         public SerialController(String defPort,int defBaud)
         {
@@ -28,6 +30,8 @@ namespace CCTVClient
             // Create a new ActiveSerialPort object with default settings.
             ActiveSerialPort =new SerialPort(defPort, defBaud, System.IO.Ports.Parity.None, 8, System.IO.Ports.StopBits.One);
             dataCount++;
+            startCode = "GO";
+            stopCode = "STOP";
         }
 
         public void Read()

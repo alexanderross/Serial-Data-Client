@@ -113,6 +113,11 @@ An example of a datainstance would be
 
 Version 0.2
 	Current
+Version 0.3
+
+	Enable the class to manage it's sensor inputs on the fly. While it will load all definitions from file, upon recieving a different set of
+data, visual classes must be able to change their displays accordingly. If this proves too arduous, a 'refresh' button will suffice.
+
 Version 0.4
 	Implement tag <DISCRETE> in analog instances. This would add the ability to add discrete assignments to ranges of values.
 	ie.(For a reading from a photoresistor range(0-1024)) 
@@ -134,7 +139,10 @@ Version 0.4
 			</RANGE>
 		</DISCRETE>
 
-More later...
+	Coordinate with the serial controller and data pool class to recieve input from more than one device.
+
+
+
 
 	
 

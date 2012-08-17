@@ -19,7 +19,6 @@ namespace CCTVClient
     public partial class MainPage : Form
     {
         public DataManagerPool dataController;
-        public SerialController mySerialConn;
         public ContextPanel activeContext;
         public CCTVWebServer HTTPServerInstance;
         private System.Timers.Timer myTimer;
@@ -36,10 +35,8 @@ namespace CCTVClient
 
             HTTPServerInstance = new CCTVWebServer(dataController,int.Parse(dataController.Config.GetConfigElement("http_port_default")),"www");
 
-            mySerialConn = new SerialController(dataController.Config.GetConfigElement("serial_port_default"), int.Parse(dataController.Config.GetConfigElement("serial_rate_default")));
-
             VersionLabel.Text = "Version: "+dataController.Config.GetConfigElement("version_number") + dataController.Config.GetConfigElement("build_date");
-            mySerialConn.StartRx();
+            dataController.DataLink.StartRx();
             this.activeContext = new MainPanel(this);
             this.contextContainer.Controls.Add(this.activeContext);
             ((MainPanel)this.activeContext).InitSensorAndDetails();
@@ -57,13 +54,13 @@ namespace CCTVClient
 
         public void OnTimedEvent(object source, ElapsedEventArgs e)
         {
+            dataController.Refresh();
             int value = 0;
             this.activeContext.updateData();
-            if (this.mySerialConn.ActiveSerialPort.IsOpen)
+            if (this.dataController.DataLink.ActiveSerialPort.IsOpen)
             {
                 this.SerialActiveLabel.Text = "CONNECTED";
-                this.Invoke((MethodInvoker)delegate { this.SerialActiveLabel.ForeColor = Color.Green; });
-                dataController.MCU.ReadMCUOutput(mySerialConn.GetCurrentData());
+                this.Invoke((MethodInvoker)delegate { this.SerialActiveLabel.ForeColor = Color.Green; });        
             }
             else
             {
@@ -83,8 +80,8 @@ namespace CCTVClient
                 this.Invoke((MethodInvoker)delegate { this.HHTPActiveLabel.ForeColor = Color.Red; });
             }
 
-            this.statusActivePortName.Text = "Port:"+this.mySerialConn.ActiveSerialPort.PortName;
-            this.statusActivePortBaud.Text = "Rate:" + this.mySerialConn.ActiveSerialPort.BaudRate.ToString();   
+            this.statusActivePortName.Text = "Port:"+this.dataController.DataLink.ActiveSerialPort.PortName;
+            this.statusActivePortBaud.Text = "Rate:" + this.dataController.DataLink.ActiveSerialPort.BaudRate.ToString();   
         }
 
 
@@ -103,21 +100,21 @@ namespace CCTVClient
 
         private void SerialActiveLabel_Click(object sender, EventArgs e)
         {
-            if (!this.mySerialConn.ActiveSerialPort.IsOpen)
+            if (!this.dataController.DataLink.ActiveSerialPort.IsOpen)
             {
-                mySerialConn.StartRx();
+                dataController.DataLink.StartRx();
             }
             else
             {
-                mySerialConn.Disconnect();
+                dataController.DataLink.Disconnect();
             }
         }
 
         private void MainPage_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.mySerialConn.ActiveSerialPort.IsOpen)
+            if (this.dataController.DataLink.ActiveSerialPort.IsOpen)
             {
-                this.Invoke((MethodInvoker)delegate {mySerialConn.Disconnect(); });
+                this.Invoke((MethodInvoker)delegate {dataController.DataLink.Disconnect(); });
             }
             if (this.HTTPServerInstance.IsAlive)
             {

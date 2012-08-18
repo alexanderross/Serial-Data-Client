@@ -16,7 +16,9 @@ namespace CCTVClient.Data
             valueDisplay.Location = new System.Drawing.Point(210,0);
             this.Controls.Add(valueDisplay);
             valueDisplay.Size = new System.Drawing.Size(100, 25);
+            valueDisplay.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             valueDisplay.Text = "VAL";
+            valueDisplay.ForeColor = System.Drawing.Color.White;
             containedData = item;
             InitializeElement();
         }

@@ -16,7 +16,7 @@ namespace CCTVClient.Data
             InitializeElement();
             valueDisplay = new Label();
             slideDataDisplay = new Panel();
-            valueDisplay.Size = new System.Drawing.Size(200, 25);
+            valueDisplay.AutoSize = false;
             valueDisplay.BackColor = System.Drawing.Color.FromArgb(0,255,255,255);
             this.Controls.Add(slideDataDisplay);
             this.slideDataDisplay.Controls.Add(valueDisplay);
@@ -27,6 +27,8 @@ namespace CCTVClient.Data
             valueDisplay.ForeColor = System.Drawing.Color.White;
             valueDisplay.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             valueDisplay.Text = "VAL";
+            valueDisplay.Size = new System.Drawing.Size(200, 25);
+            valueDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
         }
 
         override public void InitializeElement()
@@ -44,8 +46,8 @@ namespace CCTVClient.Data
             this.Invoke((MethodInvoker)delegate {
             String newText = ((AnalogDataItem)containedData).GetValueFormatted();
             valueDisplay.Text = newText; 
-            double newWidth=(((AnalogDataItem)containedData).ActualMax-((AnalogDataItem)containedData).ActualMin);
-                newWidth=(((AnalogDataItem)containedData).value-((AnalogDataItem)containedData).ActualMin)/newWidth;
+            double newWidth=(((AnalogDataItem)containedData).MaxValue-((AnalogDataItem)containedData).MinValue);
+                newWidth=(((AnalogDataItem)containedData).GetRealValue()-((AnalogDataItem)containedData).MinValue)/newWidth;
                 if (newWidth >= 0 && newWidth <= 1)
                 {
                     slideDataDisplay.BackColor = System.Drawing.Color.FromArgb((int)(255 - (newWidth * 255)), (int)(0 + (newWidth * 255)), 0);

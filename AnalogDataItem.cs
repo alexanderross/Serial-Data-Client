@@ -29,6 +29,10 @@ namespace CCTVClient.Data
 
         }
 
+        public int GetRealValue(){
+            return (int)((((value-ActualMin) / (double)(ActualMax - ActualMin)) * (MaxValue - MinValue)) + MinValue);
+        }
+
         override public String FormatDataForSave()
         {
             String xmlString = "";
@@ -70,7 +74,7 @@ namespace CCTVClient.Data
 
         override public String GetValueFormatted()
         {
-            return value.ToString();
+            return GetRealValue().ToString();
         }
 
         override public String ToString()
@@ -100,13 +104,13 @@ namespace CCTVClient.Data
                 case MCUDataATTR.DATA_UNITS:
                     return "<b class=\"sensorAttrName\">Details:</b><label class=\"sensorUnits\"> " + Units + "</label>\n";
                 case MCUDataATTR.DATA_MIN:
-                    return "<b class=\"sensorAttrName\">Current Value:</b><label class=\"sensorMin\"> " + MinValue.ToString() + "</label>\n";
+                    return "<b class=\"sensorAttrName\">Minumum Value:</b><label class=\"sensorMin\"> " + MinValue.ToString() + "</label>\n";
                 case MCUDataATTR.DATA_MAX:
-                    return "<b class=\"sensorAttrName\">Current Value:</b><label class=\"sensorMax\"> " + MaxValue.ToString() + "</label>\n";
+                    return "<b class=\"sensorAttrName\">Maximum Value:</b><label class=\"sensorMax\"> " + MaxValue.ToString() + "</label>\n";
                 case MCUDataATTR.DATA_ACTUALMIN:
-                    return "<b class=\"sensorAttrName\">Current Value:</b><label class=\"sensorActualMin\"> " + ActualMin.ToString() + "</label>\n";
+                    return "<b class=\"sensorAttrName\">Minumum Actual Value:</b><label class=\"sensorActualMin\"> " + ActualMin.ToString() + "</label>\n";
                 case MCUDataATTR.DATA_ACTUALMAX:
-                    return "<b class=\"sensorAttrName\">Current Value:</b><label class=\"sensorActualMax\"> " + ActualMax.ToString() + "</label>\n";
+                    return "<b class=\"sensorAttrName\">Maximum Actual Value:</b><label class=\"sensorActualMax\"> " + ActualMax.ToString() + "</label>\n";
                 default:
                     return "<b class=\"error\">!Parameter not valid</b>\n";
             }

@@ -7,6 +7,7 @@ using System.Xml;
 using System.IO;
 using CCTVClient.Data;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace CCTVClient.DataManagers
 {
@@ -15,6 +16,8 @@ namespace CCTVClient.DataManagers
     {
         public Dictionary<String, MCUDataAsset> DataItems;
         private bool autoUpdate=false;
+        public bool hasSeenData = false;
+        private bool directoryReady = false;
         public String xmlLocation
         {
             get;
@@ -38,9 +41,13 @@ namespace CCTVClient.DataManagers
             }
             else
             {
-                DataItems.Add(input.rawDataName, input);
+                //.25 Regex is needed for misreads caused by incomplete transmissions, and for raw names that goof with parsing.
+                if (Regex.IsMatch(input.rawDataName, @"^[A-Za-z0-9]*$"))
+                {
+                    DataItems.Add(input.rawDataName, input);
+                    if (autoUpdate) { writeDataToXML(); }
+                }
             }
-            if (autoUpdate){writeDataToXML();}
         }
 
         public void AddMCUData(MCUDataAsset[] input){
@@ -52,17 +59,22 @@ namespace CCTVClient.DataManagers
 
         public void ReadMCUOutput(Dictionary<String, int> data)
         {
-            foreach (KeyValuePair<String, int> token in data)
+            if (directoryReady)
             {
-                if (DataItems.ContainsKey(token.Key.Substring(1)))
+                foreach (KeyValuePair<String, int> token in data)
                 {
-                    DataItems[token.Key.Substring(1)].value = (UInt32)token.Value;
+                    if (DataItems.ContainsKey(token.Key.Substring(1)))
+                    {
+                        DataItems[token.Key.Substring(1)].value = (UInt32)token.Value;
+                    }
+                    else
+                    {
+                        AddMCUData(MCUAssetFactory.getInstance(token));
+                    }
                 }
-                else
-                {
-                    AddMCUData(MCUAssetFactory.getInstance(token));
-                }
+                hasSeenData = true;
             }
+            
         }
 
         public void ModifyMCUAttribute(String dataKey, UInt16 attribute, String inputData)
@@ -82,7 +94,7 @@ namespace CCTVClient.DataManagers
                     break;
             }
 
-            if (autoUpdate) { writeDataToXML(); }
+            if (autoUpdate) {writeDataToXML(); }
         }
 
         public void ModifyMCUAttribute(String dataKey, UInt16 attribute, UInt32 inputData)
@@ -108,7 +120,7 @@ namespace CCTVClient.DataManagers
                     break;
             }
 
-            if (autoUpdate) { writeDataToXML(); }
+            if (autoUpdate) {writeDataToXML(); }
         }
 
         public void ModifyMCUValue(String dataKey, UInt32 inputData)
@@ -131,8 +143,11 @@ namespace CCTVClient.DataManagers
 
         public void writeDataToXML()
         {
-           // System.IO.File.WriteAllText(@xmlLocation, packageIntoXML());
-            Console.WriteLine("(writeDataToXML@MCUDataManager):Saved definitions");
+            if (directoryReady)
+            {
+                System.IO.File.WriteAllText(@xmlLocation, packageIntoXML());
+                Console.WriteLine("(writeDataToXML@MCUDataManager):Saved definitions");
+            }
         }
 
         public void importDefinitions()
@@ -202,6 +217,7 @@ namespace CCTVClient.DataManagers
                 }
             }
             Console.WriteLine("(importDefinitions@MCUDataManager):Imported metaData");
+            directoryReady = true;
             reader.Close();
         }
     }

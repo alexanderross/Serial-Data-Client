@@ -66,7 +66,7 @@ namespace CCTVClient.Data
                 case MCUDataATTR.DATA_DETAILS:
                     return "<b class=\"sensorAttrName\">Details:</b><label class=\"sensorDetails\"> " + dataDescription + "</label>";
                 case MCUDataATTR.DATA_VALUE:
-                    return "<b class=\"sensorAttrName\">Current Value:</b><label class=\"sensorVal\"> " + value.ToString() + "</label>";
+                    return "<b class=\"sensorAttrName\">Current Value:</b><label class=\"sensorVal\"> " + GetValueFormatted() + "</label>";
                 default:
                     return "<b class=\"error\">!Parameter not valid</b>";
             }

@@ -35,7 +35,7 @@ namespace CCTVClient
 
             HTTPServerInstance = new CCTVWebServer(dataController,int.Parse(dataController.Config.GetConfigElement("http_port_default")),"www");
 
-            VersionLabel.Text = "Version: "+dataController.Config.GetConfigElement("version_number") + dataController.Config.GetConfigElement("build_date");
+            VersionLabel.Text = "Version: "+dataController.Config.GetConfigElement("version_number") +" :: "+ dataController.Config.GetConfigElement("build_date");
             dataController.DataLink.StartRx();
             this.activeContext = new MainPanel(this);
             this.contextContainer.Controls.Add(this.activeContext);

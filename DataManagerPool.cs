@@ -21,14 +21,19 @@ namespace CCTVClient
             DataLink= new SerialController(Config.GetConfigElement("serial_port_default"), int.Parse(Config.GetConfigElement("serial_rate_default")));
             MCU = new MCUDataManager(ReturnConfirmedLocale(Config.GetConfigElement("definition_location"), Config.GetConfigElement("definition_location")));
             Console.WriteLine("(INIT@DATAPOOL):Started Okay!");
+            ApplyDetailedConfigItems();
         }
 
         public void ApplyDetailedConfigItems(){
+            Console.WriteLine("(ApplyDetailedConfigItems@DATAPOOL):Applying advanced options.");
             foreach (KeyValuePair<string, string> cfgitem in Config.Data)
             {
                 switch (cfgitem.Key)
                 {
                         //Serial V0.4
+                    case "serial_read_buffer_size":
+                        DataLink.setInputBufferSize(int.Parse(cfgitem.Value));
+                        break;
                     case "serial_data_bits":
                         DataLink.SetPortDataBits(int.Parse(cfgitem.Value));
                         break;

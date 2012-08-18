@@ -56,7 +56,10 @@ Version 0.5:
 	SENSORS[SENSOR_NAME].MODIFY.MINACTUALVALUE(VALUE):Edit the minimum Actual value of a sensor (See sensor section for clarification towards the word 'actual')
 	SENSORS[SENSOR_NAME].MODIFY.MAXACTUALVALUE(VALUE):Edit the max Actual value of a sensor
 	SENSORS[SENSOR_NAME].MODIFY.UNITS(VALUE):Edit the units to be displayed for the interpreted sensor reading
-
+	Notes for me:
+		@.25: Why am i modifying values via. hardcoded web files. This needs to be handled within a POST, so really we need to check for these vars in the POST request,
+		not the page being served within a GET request. 
+	
 Serial Connection
 ==================
 

@@ -29,9 +29,9 @@ namespace CCTVClient
 
             // Create a new ActiveSerialPort object with default settings.
             ActiveSerialPort =new SerialPort(defPort, defBaud, System.IO.Ports.Parity.None, 8, System.IO.Ports.StopBits.One);
-            dataCount++;
-            startCode = "GO";
-            stopCode = "STOP";
+            dataCount++;    
+            startCode = "GO!";
+            stopCode = "STOP!";
         }
 
         public void Read()
@@ -42,6 +42,11 @@ namespace CCTVClient
                 input = ActiveSerialPort.ReadLine();
                 //inputArray = Regex.Split(ActiveSerialPort.ReadExisting(), "\r\n");
                 //input = inputArray[2];
+                if (ActiveSerialPort.BytesToRead > 1000)
+                {
+                    Console.WriteLine("(Read@SerialController):Buffer's getting full, speed up your read interval to match the serial rate.");
+                    ActiveSerialPort.DiscardInBuffer();
+                }
                 //ActiveSerialPort.DiscardInBuffer();
                 Console.WriteLine(input);
                 dataCount++;
@@ -55,8 +60,9 @@ namespace CCTVClient
                 try
                 {
                     ActiveSerialPort.Open();
+                    ActiveSerialPort.DiscardInBuffer();
                     _continue = true;
-                    StartTx("START!");
+                    StartTx(startCode);
                     _readThread = new Thread(Read);
                     _readThread.Start();
                 }
@@ -71,13 +77,13 @@ namespace CCTVClient
         {
             if (ActiveSerialPort.IsOpen)
             {
-                ActiveSerialPort.WriteLine(message);
+                ActiveSerialPort.Write(message);
             }
         }
 
         public void Disconnect()
         {
-            StartTx("STOP!");
+            StartTx(stopCode);
             _continue = false;
             _readThread.Join();
             ActiveSerialPort.Close();
@@ -117,6 +123,12 @@ namespace CCTVClient
         public void setReadDelay(int delay)
         {
             READ_SPEED = delay;
+        }
+
+
+        public void setInputBufferSize(int size)
+        {
+            ActiveSerialPort.ReadBufferSize = size;
         }
 
         public String[] GetPorts()

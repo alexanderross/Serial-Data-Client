@@ -60,7 +60,7 @@ namespace CCTVClient
             this.ResumeLayout(false);
             this.PerformLayout();
 
-            populateParams();
+            //populateParams();
         }
 
         public void populateParams()
@@ -88,6 +88,18 @@ namespace CCTVClient
             });
         }
 
+        private void AddComplexDisplay()
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                dataLabels.Add("AXISDISP", new Data.CompoundDataDisplay(parent.dataController.MCU.DataItems["XAXIS"],parent.dataController.MCU.DataItems["YAXIS"]));
+                this.SensorReadingsContainer.Controls.Add(dataLabels["AXISDISP"]);
+                dataLabels["AXISDISP"].Location = new System.Drawing.Point(12, dataLabelHeights[paramNumber]);
+                paramNumber++;
+                populated = true;
+            });
+        }
+
         private void RefreshLabels()
         {
             this.SensorReadingsContainer.Controls.Clear();
@@ -100,8 +112,14 @@ namespace CCTVClient
         {
             if (!populated)
             {
-                populateParams();
-            }
+                AddComplexDisplay();
+                //populateParams();
+            }else{
+                this.Invoke((MethodInvoker)delegate
+                {
+                    dataLabels["AXISDISP"].RefreshData();
+                });
+            }/*
             foreach (MCUDataAsset token in parent.dataController.MCU.DataItems.Values)
             {
                 if (dataLabels.ContainsKey(token.rawDataName))
@@ -112,7 +130,10 @@ namespace CCTVClient
                 {
                     AddDataLabel(token.rawDataName, token);
                 }
-            }
+            }*/
+
+
+
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CCTVClient.Data
     public class DigitalDataItem:MCUDataAsset
     {
 
-        public DigitalDataItem(String rawName,UInt32 valueIn=0):base()
+        public DigitalDataItem(String rawName,Int32 valueIn=0):base()
         {
             rawDataName = rawName;
             value = valueIn;

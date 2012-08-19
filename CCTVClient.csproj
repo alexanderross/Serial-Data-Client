@@ -53,6 +53,9 @@
     </Compile>
     <Compile Include="AnalogDataItem.cs" />
     <Compile Include="CCTVWebServer.cs" />
+    <Compile Include="CompundDataDisplay.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ContextPanel.cs">
       <SubType>Component</SubType>
     </Compile>

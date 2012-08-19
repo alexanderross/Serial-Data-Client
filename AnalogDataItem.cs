@@ -8,16 +8,16 @@ namespace CCTVClient.Data
     public class AnalogDataItem:MCUDataAsset
     {
 
-        public UInt32 MaxValue{get;set;} 
-        public UInt32 MinValue{get;set;}
-        public UInt32 ActualMax{get;set;}
-        public UInt32 ActualMin{get;set;}
+        public Int32 MaxValue{get;set;} 
+        public Int32 MinValue{get;set;}
+        public Int32 ActualMax{get;set;}
+        public Int32 ActualMin{get;set;}
         public string Units{get;set;}
 
-        public AnalogDataItem(string name,UInt32 val=0,UInt16 max=1024, UInt16 min=0, String unitsin="UNIT", UInt16 actualMin = 0, UInt16 actualMax = 1024)
+        public AnalogDataItem(string name,Int32 val=0,Int16 max=1024, Int16 min=0, String unitsin="UNIT", Int16 actualMin = 0, Int16 actualMax = 1024)
             : base()
         {
-            
+           
             rawDataName = name;
             value = val;
         
@@ -30,7 +30,12 @@ namespace CCTVClient.Data
         }
 
         public int GetRealValue(){
-            return (int)((((value-ActualMin) / (double)(ActualMax - ActualMin)) * (MaxValue - MinValue)) + MinValue);
+            return (int)(((GetPct()) * (MaxValue - MinValue)) + MinValue);
+        }
+
+        public float GetPct()
+        {
+            return ((value - ActualMin) / (float)(ActualMax - ActualMin));
         }
 
         override public String FormatDataForSave()

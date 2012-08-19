@@ -10,8 +10,10 @@ namespace CCTVClient.Data
     {
         private Label valueDisplay;
         public DigitalDataDisplay(MCUDataAsset item)
-            : base(item)
+            : base()
         {
+            containedData = item;
+            NameLabel.Text = item.refinedDataName + "(" + item.rawDataName + ")";
             valueDisplay = new Label();
             valueDisplay.Location = new System.Drawing.Point(210,0);
             this.Controls.Add(valueDisplay);
@@ -20,7 +22,6 @@ namespace CCTVClient.Data
             valueDisplay.Text = "VAL";
             valueDisplay.ForeColor = System.Drawing.Color.White;
             containedData = item;
-            InitializeElement();
         }
 
         override public void InitializeElement()

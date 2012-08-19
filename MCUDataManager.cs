@@ -65,7 +65,7 @@ namespace CCTVClient.DataManagers
                 {
                     if (DataItems.ContainsKey(token.Key.Substring(1)))
                     {
-                        DataItems[token.Key.Substring(1)].value = (UInt32)token.Value;
+                        DataItems[token.Key.Substring(1)].value = (Int32)token.Value;
                     }
                     else
                     {
@@ -97,7 +97,7 @@ namespace CCTVClient.DataManagers
             if (autoUpdate) {writeDataToXML(); }
         }
 
-        public void ModifyMCUAttribute(String dataKey, UInt16 attribute, UInt32 inputData)
+        public void ModifyMCUAttribute(String dataKey, UInt16 attribute, Int32 inputData)
         {
             switch (attribute)
             {
@@ -123,7 +123,7 @@ namespace CCTVClient.DataManagers
             if (autoUpdate) {writeDataToXML(); }
         }
 
-        public void ModifyMCUValue(String dataKey, UInt32 inputData)
+        public void ModifyMCUValue(String dataKey,Int32 inputData)
         {
             DataItems[dataKey].value = inputData;
         }
@@ -185,19 +185,19 @@ namespace CCTVClient.DataManagers
                                 temp.dataDescription = reader.ReadInnerXml();
                                 break;
                             case "MINVALUE":
-                                ((AnalogDataItem)temp).MinValue = UInt32.Parse(reader.ReadInnerXml());
+                                ((AnalogDataItem)temp).MinValue = Int32.Parse(reader.ReadInnerXml());
                                 break;
                             case "MAXVALUE":
-                                ((AnalogDataItem)temp).MaxValue = UInt32.Parse(reader.ReadInnerXml());
+                                ((AnalogDataItem)temp).MaxValue = Int32.Parse(reader.ReadInnerXml());
                                 break;
                             case "UNITS":
                                 ((AnalogDataItem)temp).Units = reader.ReadInnerXml();
                                 break;
                             case "MINACTUALVALUE":
-                                ((AnalogDataItem)temp).ActualMin = UInt32.Parse(reader.ReadInnerXml());
+                                ((AnalogDataItem)temp).ActualMin = Int32.Parse(reader.ReadInnerXml());
                                 break;
                             case "MAXACTUALVALUE":
-                                ((AnalogDataItem)temp).ActualMax = UInt32.Parse(reader.ReadInnerXml());
+                                ((AnalogDataItem)temp).ActualMax = Int32.Parse(reader.ReadInnerXml());
                                 break;
                             default:
                                 break;

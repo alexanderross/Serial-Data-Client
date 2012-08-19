@@ -47,8 +47,8 @@ namespace CCTVClient
                     Console.WriteLine("(Read@SerialController):Buffer's getting full, speed up your read interval to match the serial rate.");
                     ActiveSerialPort.DiscardInBuffer();
                 }
+                //Console.WriteLine(input);
                 //ActiveSerialPort.DiscardInBuffer();
-                Console.WriteLine(input);
                 dataCount++;
             }
         }

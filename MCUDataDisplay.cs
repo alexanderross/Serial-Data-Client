@@ -12,7 +12,7 @@ namespace CCTVClient.Data
         protected Label NameLabel;
 
 
-        public MCUDataDisplay(MCUDataAsset input)
+        public MCUDataDisplay()
             : base()
         {
             NameLabel = new Label();
@@ -26,10 +26,9 @@ namespace CCTVClient.Data
             this.NameLabel.Size = new System.Drawing.Size(210, 25);
 
 
-            NameLabel.Text = input.refinedDataName + "(" + input.rawDataName + ")";
+            
             this.Controls.Add(NameLabel);
         }
-
         public abstract void InitializeElement();
         public abstract String formatDataForHTML();
 

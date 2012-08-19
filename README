@@ -10,6 +10,17 @@ Called CCTV.cfg, sits happily in '/', loaded and managed by (DataManagers.CFGDat
 
 Stores user-defined values for aspects of the utility's operation. If important ones of these are removed, the utlity can replace them at it's discretion.
 
+Visual Data Tags
+==================
+Items in the data viewing window that portray data. 
+
+Version 0.2
+	Analog Data is represented in a continuous manner using a color-coded bar with it's corresponding value. This uses a user-defined range of values for the sensor (default 0-1024)
+	Digital Data is represented either as 'low' or 'high'
+
+Version 0.3
+	Compound Data takes two Analog Inputs and portrays them as an x,y visual. Think pitch/yaw displays? 
+
 Web Server
 ==================
 The client includes it's own HTTP server. Looks at /www/ as it's siteroot and runs at localhost.

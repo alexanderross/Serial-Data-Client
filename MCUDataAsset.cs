@@ -23,7 +23,7 @@ namespace CCTVClient.Data
             get;
             set;
         }
-        public UInt32 value
+        public Int32 value
         {
             get;
             set;

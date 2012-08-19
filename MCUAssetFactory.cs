@@ -12,11 +12,11 @@ namespace CCTVClient.Data
         {
             if (input.Key.Contains('&'))
             {
-                return new DigitalDataItem(input.Key.Replace("&",""),(UInt32)input.Value);
+                return new DigitalDataItem(input.Key.Replace("&",""),(Int32)input.Value);
             }
             else
             {
-                return new AnalogDataItem(input.Key.Replace("@", ""), (UInt32)input.Value);
+                return new AnalogDataItem(input.Key.Replace("@", ""), (Int32)input.Value);
             }
         }
 

@@ -10,8 +10,9 @@ namespace CCTVClient.Data
     {
         private Label valueDisplay;
         private Panel slideDataDisplay;
-        public AnalogDataDisplay(MCUDataAsset input):base(input)
+        public AnalogDataDisplay(MCUDataAsset input):base()
         {
+            NameLabel.Text = input.refinedDataName + "(" + input.rawDataName + ")";
             containedData = input;
             InitializeElement();
             valueDisplay = new Label();

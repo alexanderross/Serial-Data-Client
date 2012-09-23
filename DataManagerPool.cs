@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using CCTVClient.Data;
+using CCTVClient.Alerts;
 using CCTVClient.DataManagers;
 
 namespace CCTVClient
@@ -13,13 +15,18 @@ namespace CCTVClient
         public CFGDataManager Config;
         public MCUDataManager MCU;
         public SerialController DataLink;
+        public SubscriptionManager SubscriptionLink; 
+        public SMSAlert PhoneAlert;
         private bool dataReady = false;
 
         public DataManagerPool(String cfgLocale)
         {
             Config = new CFGDataManager(Directory.GetCurrentDirectory()+"//"+cfgLocale);
+            SubscriptionLink = new SubscriptionManager(Config.GetConfigElement("subscriptions_locale_default"));
             DataLink= new SerialController(Config.GetConfigElement("serial_port_default"), int.Parse(Config.GetConfigElement("serial_rate_default")));
             MCU = new MCUDataManager(ReturnConfirmedLocale(Config.GetConfigElement("definition_location"), Config.GetConfigElement("definition_location")));
+            PhoneAlert = new SMSAlert(Config.GetConfigElement("smtp_server"), int.Parse(Config.GetConfigElement("smtp_port")), Config.GetConfigElement("smtp_username"), Config.GetConfigElement("smtp_password"), false, "smartCCTV");
+
             Console.WriteLine("(INIT@DATAPOOL):Started Okay!");
             ApplyDetailedConfigItems();
         }
@@ -77,6 +84,16 @@ namespace CCTVClient
             if (DataLink.ActiveSerialPort.IsOpen)
             {
                 MCU.ReadMCUOutput(DataLink.GetCurrentData());
+                foreach (MCUDataAsset data in MCU.DataItems.Values)
+                {
+                    foreach (Subscription sub in SubscriptionLink.Subscriptions[data.rawDataName])
+                    {
+                        if (sub.Check(data.value))
+                        {
+                            PhoneAlert.SendMessage(data.refinedDataName + " Has Been Tripped.", "206948****@vtext.com");
+                        }
+                    }
+                }
             }
         }
     }

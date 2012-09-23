@@ -91,10 +91,12 @@ namespace CCTVClient
             if (this.HTTPServerInstance.IsAlive)
             {
                 HTTPServerInstance.Stop();
+                dataController.PhoneAlert.SendMessage("HTTP Service Disabled", "2069486945@vtext.com");
             }
             else
             {
                 HTTPServerInstance.Start();
+                dataController.PhoneAlert.SendMessage("HTTP Service Started", "2069486945@vtext.com");
             }
         }
 

@@ -84,9 +84,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MCUDataManager.cs" />
+    <Compile Include="MCUInstance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialController.cs" />
+    <Compile Include="SerialRouter.cs" />
     <Compile Include="Setup.cs">
       <SubType>Form</SubType>
     </Compile>

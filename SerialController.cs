@@ -53,6 +53,10 @@ namespace CCTVClient
             }
         }
 
+        public void Write()
+        {
+        }
+
         public void StartRx()
         {
             if (ActiveSerialPort.PortName != null)

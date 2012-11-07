@@ -86,11 +86,13 @@ namespace CCTVClient
                 MCU.ReadMCUOutput(DataLink.GetCurrentData());
                 foreach (MCUDataAsset data in MCU.DataItems.Values)
                 {
-                    foreach (Subscription sub in SubscriptionLink.Subscriptions[data.rawDataName])
-                    {
-                        if (sub.Check(data.value))
+                    if(SubscriptionLink.Subscriptions.ContainsKey(data.rawDataName)){
+                        foreach (Subscription sub in SubscriptionLink.Subscriptions[data.rawDataName])
                         {
-                            PhoneAlert.SendMessage(data.refinedDataName + " Has Been Tripped.", "206948****@vtext.com");
+                            if (sub.Check(data.value))
+                            {
+                                PhoneAlert.SendMessage(data.refinedDataName + " Has Been Tripped.", "206948****@vtext.com");
+                            }
                         }
                     }
                 }

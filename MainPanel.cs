@@ -60,7 +60,7 @@ namespace CCTVClient
             this.ResumeLayout(false);
             this.PerformLayout();
 
-            //populateParams();
+            populateParams();
         }
 
         public void populateParams()
@@ -112,25 +112,22 @@ namespace CCTVClient
         {
             if (!populated)
             {
-                AddComplexDisplay();
-                //populateParams();
+                //AddComplexDisplay();
+                populateParams();
             }else{
-                this.Invoke((MethodInvoker)delegate
+                foreach (MCUDataAsset token in parent.dataController.MCU.DataItems.Values)
                 {
-                    dataLabels["AXISDISP"].RefreshData();
-                });
-            }/*
-            foreach (MCUDataAsset token in parent.dataController.MCU.DataItems.Values)
-            {
-                if (dataLabels.ContainsKey(token.rawDataName))
-                {
-                    dataLabels[token.rawDataName].RefreshData();
+                    if (dataLabels.ContainsKey(token.rawDataName))
+                    {
+                        dataLabels[token.rawDataName].RefreshData();
+                    }
+                    else
+                    {
+                        AddDataLabel(token.rawDataName, token);
+                    }
                 }
-                else
-                {
-                    AddDataLabel(token.rawDataName, token);
-                }
-            }*/
+            }
+            
 
 
 

@@ -158,63 +158,70 @@ namespace CCTVClient.DataManagers
             String currentName = "";
             bool onInstance = false;
             int ct = 0;
-            while (reader.Read())
+            try
             {
-                ct++;
-                if (currentType != "" && currentName != "")
+                while (reader.Read())
                 {
-                    temp = MCUAssetFactory.getInstance(currentType, currentName);
-                    currentName = "";
-                    currentType = "";
-                }
-                switch (reader.NodeType)
-                {
-                    case XmlNodeType.Element: // The node is an element.
-                        switch (reader.Name)
-                        {
-                            case "DATAINSTANCE":
-                                currentType = reader.GetAttribute(0);
-                                break;
-                            case "RAWNAME":
-                                currentName = reader.ReadInnerXml();                            
-                                break;
-                            case "REFINEDNAME":
-                                temp.refinedDataName = reader.ReadInnerXml();
-                                break;
-                            case "DESCRIPTION":
-                                temp.dataDescription = reader.ReadInnerXml();
-                                break;
-                            case "MINVALUE":
-                                ((AnalogDataItem)temp).MinValue = Int32.Parse(reader.ReadInnerXml());
-                                break;
-                            case "MAXVALUE":
-                                ((AnalogDataItem)temp).MaxValue = Int32.Parse(reader.ReadInnerXml());
-                                break;
-                            case "UNITS":
-                                ((AnalogDataItem)temp).Units = reader.ReadInnerXml();
-                                break;
-                            case "MINACTUALVALUE":
-                                ((AnalogDataItem)temp).ActualMin = Int32.Parse(reader.ReadInnerXml());
-                                break;
-                            case "MAXACTUALVALUE":
-                                ((AnalogDataItem)temp).ActualMax = Int32.Parse(reader.ReadInnerXml());
-                                break;
-                            default:
-                                break;
-         
+                    ct++;
+                    if (currentType != "" && currentName != "")
+                    {
+                        temp = MCUAssetFactory.getInstance(currentType, currentName);
+                        currentName = "";
+                        currentType = "";
+                    }
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element: // The node is an element.
+                            switch (reader.Name)
+                            {
+                                case "DATAINSTANCE":
+                                    currentType = reader.GetAttribute(0);
+                                    break;
+                                case "RAWNAME":
+                                    currentName = reader.ReadInnerXml();
+                                    break;
+                                case "REFINEDNAME":
+                                    temp.refinedDataName = reader.ReadInnerXml();
+                                    break;
+                                case "DESCRIPTION":
+                                    temp.dataDescription = reader.ReadInnerXml();
+                                    break;
+                                case "MINVALUE":
+                                    ((AnalogDataItem)temp).MinValue = Int32.Parse(reader.ReadInnerXml());
+                                    break;
+                                case "MAXVALUE":
+                                    ((AnalogDataItem)temp).MaxValue = Int32.Parse(reader.ReadInnerXml());
+                                    break;
+                                case "UNITS":
+                                    ((AnalogDataItem)temp).Units = reader.ReadInnerXml();
+                                    break;
+                                case "MINACTUALVALUE":
+                                    ((AnalogDataItem)temp).ActualMin = Int32.Parse(reader.ReadInnerXml());
+                                    break;
+                                case "MAXACTUALVALUE":
+                                    ((AnalogDataItem)temp).ActualMax = Int32.Parse(reader.ReadInnerXml());
+                                    break;
+                                default:
+                                    break;
 
-                        }
-                        break;
-                    case XmlNodeType.Text: //Display the text in each element.
-                        Console.WriteLine(reader.Value);
-                        break;
-                    case XmlNodeType.EndElement: //Display the end of the element.
-                        if (reader.Name.Equals("DATAINSTANCE"))
-                        {
-                            AddMCUData(temp);
-                        }
-                        break;
+
+                            }
+                            break;
+                        case XmlNodeType.Text: //Display the text in each element.
+                            Console.WriteLine(reader.Value);
+                            break;
+                        case XmlNodeType.EndElement: //Display the end of the element.
+                            if (reader.Name.Equals("DATAINSTANCE"))
+                            {
+                                AddMCUData(temp);
+                            }
+                            break;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("(importDefinitions@MCUDataManager):metaData Import failed: "+e.Message);
             }
             Console.WriteLine("(importDefinitions@MCUDataManager):Imported metaData");
             directoryReady = true;
